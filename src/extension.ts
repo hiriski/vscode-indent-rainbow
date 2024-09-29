@@ -4,7 +4,6 @@ import * as vscode from 'vscode';
 
 // this method is called when vs code is activated
 export function activate(context: vscode.ExtensionContext) {
-
   // Create a decorator types that we use to decorate indent levels
   let decorationTypes = [];
 
@@ -16,28 +15,46 @@ export function activate(context: vscode.ExtensionContext) {
   let activeEditor = vscode.window.activeTextEditor;
 
   // Error color gets shown when tabs aren't right,
-  //  e.g. when you have your tabs set to 2 spaces but the indent is 3 spaces
-  const error_color = vscode.workspace.getConfiguration('indentRainbow')['errorColor'] || "rgba(128,32,32,0.3)";
+  //  e.g. when you have your tabs set to 2 spa ces but the indent is 3 spaces
+  const error_color =
+    vscode.workspace.getConfiguration('indentRainbow')['errorColor'] ||
+    'rgba(128,32,32,0.3)';
   const error_decoration_type = vscode.window.createTextEditorDecorationType({
     backgroundColor: error_color
   });
 
-  const tabmix_color = vscode.workspace.getConfiguration('indentRainbow')['tabmixColor'] || "";
-  const tabmix_decoration_type = "" !== tabmix_color ? vscode.window.createTextEditorDecorationType({
-     backgroundColor: tabmix_color
-  }) : null;
+  const tabmix_color =
+    vscode.workspace.getConfiguration('indentRainbow')['tabmixColor'] || '';
+  const tabmix_decoration_type =
+    '' !== tabmix_color
+      ? vscode.window.createTextEditorDecorationType({
+          backgroundColor: tabmix_color
+        })
+      : null;
 
-  const ignoreLinePatterns = vscode.workspace.getConfiguration('indentRainbow')['ignoreLinePatterns'] || [];
-  const colorOnWhiteSpaceOnly = vscode.workspace.getConfiguration('indentRainbow')['colorOnWhiteSpaceOnly'] || false;
-  const indicatorStyle = vscode.workspace.getConfiguration('indentRainbow')['indicatorStyle'] || 'classic';
-  const lightIndicatorStyleLineWidth = vscode.workspace.getConfiguration('indentRainbow')['lightIndicatorStyleLineWidth'] || 1;
+  const ignoreLinePatterns =
+    vscode.workspace.getConfiguration('indentRainbow')['ignoreLinePatterns'] ||
+    [];
+  const colorOnWhiteSpaceOnly =
+    vscode.workspace.getConfiguration('indentRainbow')[
+      'colorOnWhiteSpaceOnly'
+    ] || false;
+  const indicatorStyle =
+    vscode.workspace.getConfiguration('indentRainbow')['indicatorStyle'] ||
+    'classic';
+  const lightIndicatorStyleLineWidth =
+    vscode.workspace.getConfiguration('indentRainbow')[
+      'lightIndicatorStyleLineWidth'
+    ] || 1;
 
   // Colors will cycle through, and can be any size that you want
-  const colors = vscode.workspace.getConfiguration('indentRainbow')['colors'] || [
-    "rgba(255,255,64,0.07)",
-    "rgba(127,255,127,0.07)",
-    "rgba(255,127,255,0.07)",
-    "rgba(79,236,236,0.07)"
+  const colors = vscode.workspace.getConfiguration('indentRainbow')[
+    'colors'
+  ] || [
+    'rgba(255,255,64,0.07)',
+    'rgba(127,255,127,0.07)',
+    'rgba(255,127,255,0.07)',
+    'rgba(79,236,236,0.07)'
   ];
 
   // Loops through colors and creates decoration types for each one
@@ -48,7 +65,7 @@ export function activate(context: vscode.ExtensionContext) {
       });
     } else if (indicatorStyle === 'light') {
       decorationTypes[index] = vscode.window.createTextEditorDecorationType({
-        borderStyle: "solid",
+        borderStyle: 'solid',
         borderColor: color,
         borderWidth: `0 0 0 ${lightIndicatorStyleLineWidth}px`
       });
@@ -56,7 +73,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   // loop through ignore regex strings and convert to valid RegEx's.
-  ignoreLinePatterns.forEach((ignorePattern,index) => {
+  ignoreLinePatterns.forEach((ignorePattern, index) => {
     if (typeof ignorePattern === 'string') {
       //parse the string for a regex
       var regParts = ignorePattern.match(/^\/(.*?)\/([gim]*)$/);
@@ -70,7 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
   });
 
-  if(activeEditor) {
+  if (activeEditor) {
     indentConfig();
   }
 
@@ -78,36 +95,54 @@ export function activate(context: vscode.ExtensionContext) {
     triggerUpdateDecorations();
   }
 
-  vscode.window.onDidChangeActiveTextEditor(editor => {
-    activeEditor = editor;
-    if (editor) {
-      indentConfig();
-    }
+  vscode.window.onDidChangeActiveTextEditor(
+    (editor) => {
+      activeEditor = editor;
+      if (editor) {
+        indentConfig();
+      }
 
-    if (editor && checkLanguage()) {
-      triggerUpdateDecorations();
-    }
-  }, null, context.subscriptions);
+      if (editor && checkLanguage()) {
+        triggerUpdateDecorations();
+      }
+    },
+    null,
+    context.subscriptions
+  );
 
-  vscode.workspace.onDidChangeTextDocument(event => {
-    if(activeEditor) {
-      indentConfig();
-    }
+  vscode.workspace.onDidChangeTextDocument(
+    (event) => {
+      if (activeEditor) {
+        indentConfig();
+      }
 
-    if (activeEditor && event.document === activeEditor.document && checkLanguage()) {
-      triggerUpdateDecorations();
-    }
-  }, null, context.subscriptions);
+      if (
+        activeEditor &&
+        event.document === activeEditor.document &&
+        checkLanguage()
+      ) {
+        triggerUpdateDecorations();
+      }
+    },
+    null,
+    context.subscriptions
+  );
 
   function isEmptyObject(obj) {
-      return Object.getOwnPropertyNames(obj).length === 0;
+    return Object.getOwnPropertyNames(obj).length === 0;
   }
 
   function indentConfig() {
-    var skiplang = vscode.workspace.getConfiguration('indentRainbow')['ignoreErrorLanguages'] || [];
+    var skiplang =
+      vscode.workspace.getConfiguration('indentRainbow')[
+        'ignoreErrorLanguages'
+      ] || [];
     skipAllErrors = false;
-    if(skiplang.length !== 0) {
-      if(skiplang.indexOf('*') !== -1 || skiplang.indexOf(currentLanguageId) !== -1) {
+    if (skiplang.length !== 0) {
+      if (
+        skiplang.indexOf('*') !== -1 ||
+        skiplang.indexOf(currentLanguageId) !== -1
+      ) {
         skipAllErrors = true;
       }
     }
@@ -115,27 +150,33 @@ export function activate(context: vscode.ExtensionContext) {
 
   function checkLanguage() {
     if (activeEditor) {
-      if(currentLanguageId !== activeEditor.document.languageId) {
-        var inclang = vscode.workspace.getConfiguration('indentRainbow')['includedLanguages'] || [];
-        var exclang = vscode.workspace.getConfiguration('indentRainbow')['excludedLanguages'] || [];
+      if (currentLanguageId !== activeEditor.document.languageId) {
+        var inclang =
+          vscode.workspace.getConfiguration('indentRainbow')[
+            'includedLanguages'
+          ] || [];
+        var exclang =
+          vscode.workspace.getConfiguration('indentRainbow')[
+            'excludedLanguages'
+          ] || [];
 
         currentLanguageId = activeEditor.document.languageId;
         doIt = true;
-        if(inclang.length !== 0) {
-          if(inclang.indexOf(currentLanguageId) === -1) {
+        if (inclang.length !== 0) {
+          if (inclang.indexOf(currentLanguageId) === -1) {
             doIt = false;
           }
         }
 
-        if(doIt && exclang.length !== 0) {
-          if(exclang.indexOf(currentLanguageId) !== -1) {
+        if (doIt && exclang.length !== 0) {
+          if (exclang.indexOf(currentLanguageId) !== -1) {
             doIt = false;
           }
         }
       }
     }
 
-    if( clearMe && ! doIt) {
+    if (clearMe && !doIt) {
       // Clear decorations when language switches away
       var decor: vscode.DecorationOptions[] = [];
       for (let decorationType of decorationTypes) {
@@ -154,7 +195,8 @@ export function activate(context: vscode.ExtensionContext) {
     if (timeout) {
       clearTimeout(timeout);
     }
-    var updateDelay = vscode.workspace.getConfiguration('indentRainbow')['updateDelay'] || 100;
+    var updateDelay =
+      vscode.workspace.getConfiguration('indentRainbow')['updateDelay'] || 100;
     timeout = setTimeout(updateDecorations, updateDelay);
   }
 
@@ -165,14 +207,16 @@ export function activate(context: vscode.ExtensionContext) {
     var regEx = /^[\t ]+/gm;
     var text = activeEditor.document.getText();
     var tabSizeRaw = activeEditor.options.tabSize;
-    var tabSize = 4
-    if(tabSizeRaw !== 'auto') {
-      tabSize=+tabSizeRaw
+    var tabSize = 4;
+    if (tabSizeRaw !== 'auto') {
+      tabSize = +tabSizeRaw;
     }
-    var tabs = " ".repeat(tabSize);
+    var tabs = ' '.repeat(tabSize);
     const ignoreLines = [];
     let error_decorator: vscode.DecorationOptions[] = [];
-    let tabmix_decorator: vscode.DecorationOptions[] = tabmix_decoration_type ? []: null;
+    let tabmix_decorator: vscode.DecorationOptions[] = tabmix_decoration_type
+      ? []
+      : null;
     let decorators = [];
     decorationTypes.forEach(() => {
       let decorator: vscode.DecorationOptions[] = [];
@@ -182,13 +226,13 @@ export function activate(context: vscode.ExtensionContext) {
     var match;
     var ignore;
 
-    if(!skipAllErrors) {
+    if (!skipAllErrors) {
       /**
        * Checks text against ignore regex patterns from config(or default).
        * stores the line positions of those lines in the ignoreLines array.
        */
-      ignoreLinePatterns.forEach(ignorePattern => {
-        while (ignore = ignorePattern.exec(text)) {
+      ignoreLinePatterns.forEach((ignorePattern) => {
+        while ((ignore = ignorePattern.exec(text))) {
           const pos = activeEditor.document.positionAt(ignore.index);
           const line = activeEditor.document.lineAt(pos).lineNumber;
           ignoreLines.push(line);
@@ -196,15 +240,15 @@ export function activate(context: vscode.ExtensionContext) {
       });
     }
 
-    var re = new RegExp("\t","g");
+    var re = new RegExp('\t', 'g');
     let defaultIndentCharRegExp = null;
 
-    while (match = regEx.exec(text)) {
+    while ((match = regEx.exec(text))) {
       const pos = activeEditor.document.positionAt(match.index);
       const line = activeEditor.document.lineAt(pos).lineNumber;
       let skip = skipAllErrors || ignoreLines.indexOf(line) !== -1; // true if the lineNumber is in ignoreLines.
-     var thematch = match[0];
-      var ma = (match[0].replace(re, tabs)).length;
+      var thematch = match[0];
+      var ma = match[0].replace(re, tabs).length;
       /**
        * Error handling.
        * When the indent spacing (as spaces) is not divisible by the tabsize,
@@ -212,38 +256,46 @@ export function activate(context: vscode.ExtensionContext) {
        * Checks for lines being ignored in ignoreLines array ( `skip` Boolran)
        * before considering the line an error.
        */
-      if(!skip && ma % tabSize !== 0) {
+      if (!skip && ma % tabSize !== 0) {
         var startPos = activeEditor.document.positionAt(match.index);
-        var endPos = activeEditor.document.positionAt(match.index + match[0].length);
-        var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: null };
+        var endPos = activeEditor.document.positionAt(
+          match.index + match[0].length
+        );
+        var decoration = {
+          range: new vscode.Range(startPos, endPos),
+          hoverMessage: null
+        };
         error_decorator.push(decoration);
       } else {
         var m = match[0];
         var l = m.length;
         var o = 0;
         var n = 0;
-        while(n < l) {
+        while (n < l) {
           const s = n;
           var startPos = activeEditor.document.positionAt(match.index + n);
-          if(m[n] === "\t") {
+          if (m[n] === '\t') {
             n++;
           } else {
-            n+=tabSize;
+            n += tabSize;
           }
           if (colorOnWhiteSpaceOnly && n > l) {
-            n = l
+            n = l;
           }
           var endPos = activeEditor.document.positionAt(match.index + n);
-          var decoration = { range: new vscode.Range(startPos, endPos), hoverMessage: null };
-          var sc=0;
-          var tc=0;
+          var decoration = {
+            range: new vscode.Range(startPos, endPos),
+            hoverMessage: null
+          };
+          var sc = 0;
+          var tc = 0;
           if (!skip && tabmix_decorator) {
             // counting (split is said to be faster than match()
             // only do it if we don't already skip all errors
-            var tc=(thematch.split("\t").length - 1)
-            if(tc) {
+            var tc = thematch.split('\t').length - 1;
+            if (tc) {
               // only do this if we already have some tabs
-              var sc=(thematch.split(" ").length - 1)
+              var sc = thematch.split(' ').length - 1;
             }
             // if we have (only) "spaces" in a "tab" indent file we
             // just ignore that, because we don't know if there
@@ -251,7 +303,7 @@ export function activate(context: vscode.ExtensionContext) {
             // If you (yes you!) know how to find this out without
             // infering this from the file, speak up :)
           }
-          if(sc>0 && tc>0) {
+          if (sc > 0 && tc > 0) {
             tabmix_decorator.push(decoration);
           } else {
             let decorator_index = o % decorators.length;
@@ -265,26 +317,29 @@ export function activate(context: vscode.ExtensionContext) {
       activeEditor.setDecorations(decorationType, decorators[index]);
     });
     activeEditor.setDecorations(error_decoration_type, error_decorator);
-    tabmix_decoration_type && activeEditor.setDecorations(tabmix_decoration_type, tabmix_decorator);
+    tabmix_decoration_type &&
+      activeEditor.setDecorations(tabmix_decoration_type, tabmix_decorator);
     clearMe = true;
   }
   /**
    * Listen for configuration change in indentRainbow section
    * When anything changes in the section, show a prompt to reload
-   * VSCode window 
-  */
-  vscode.workspace.onDidChangeConfiguration(configChangeEvent => {
-
+   * VSCode window
+   */
+  vscode.workspace.onDidChangeConfiguration((configChangeEvent) => {
     if (configChangeEvent.affectsConfiguration('indentRainbow')) {
       const actions = ['Reload now', 'Later'];
 
       vscode.window
-        .showInformationMessage('The VSCode window needs to reload for the changes to take effect. Would you like to reload the window now?', ...actions)
-        .then(action => {
+        .showInformationMessage(
+          'The VSCode window needs to reload for the changes to take effect. Would you like to reload the window now?',
+          ...actions
+        )
+        .then((action) => {
           if (action === actions[0]) {
             vscode.commands.executeCommand('workbench.action.reloadWindow');
           }
         });
     }
-	});
+  });
 }
