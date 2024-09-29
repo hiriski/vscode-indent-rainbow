@@ -14,11 +14,27 @@ export function activate(context: vscode.ExtensionContext) {
 
   let activeEditor = vscode.window.activeTextEditor;
 
+  // default colors
+  const defaultColors = [
+    'rgba(51, 102, 255, 0.1)',
+    'rgba(114, 226, 59, 0.1)',
+    'rgba(49, 206, 249, 0.1)',
+    'rgba(255, 218, 38, 0.1)',
+    'rgba(255, 90, 30, 0.1)',
+    'rgba(251, 0, 253, 0.1)',
+    'rgba(255, 11, 11, 0.1)',
+    'rgba(255, 68, 203, 0.1)',
+    'rgba(11, 236, 220, 1)'
+  ];
+
+  // default error color
+  const defaultErrorColor = 'rgba(255, 0, 0, 0.1)';
+
   // Error color gets shown when tabs aren't right,
   //  e.g. when you have your tabs set to 2 spa ces but the indent is 3 spaces
   const error_color =
     vscode.workspace.getConfiguration('indentRainbow')['errorColor'] ||
-    'rgba(128,32,32,0.3)';
+    defaultErrorColor;
   const error_decoration_type = vscode.window.createTextEditorDecorationType({
     backgroundColor: error_color
   });
@@ -48,14 +64,9 @@ export function activate(context: vscode.ExtensionContext) {
     ] || 1;
 
   // Colors will cycle through, and can be any size that you want
-  const colors = vscode.workspace.getConfiguration('indentRainbow')[
-    'colors'
-  ] || [
-    'rgba(255,255,64,0.07)',
-    'rgba(127,255,127,0.07)',
-    'rgba(255,127,255,0.07)',
-    'rgba(79,236,236,0.07)'
-  ];
+  const colors =
+    vscode.workspace.getConfiguration('indentRainbow')['colors'] ||
+    defaultColors;
 
   // Loops through colors and creates decoration types for each one
   colors.forEach((color, index) => {
