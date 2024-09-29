@@ -17,18 +17,34 @@ export function activate(context: vscode.ExtensionContext) {
   // default colors
   const defaultColors = [
     'rgba(51, 102, 255, 0.1)',
+    'rgba(255, 218, 38, 0.1)',
+    'rgba(255, 68, 203, 0.1)',
     'rgba(114, 226, 59, 0.1)',
     'rgba(49, 206, 249, 0.1)',
-    'rgba(255, 218, 38, 0.1)',
     'rgba(255, 90, 30, 0.1)',
     'rgba(251, 0, 253, 0.1)',
     'rgba(255, 11, 11, 0.1)',
-    'rgba(255, 68, 203, 0.1)',
-    'rgba(11, 236, 220, 1)'
+    'rgba(11, 236, 220, 0.1)'
+  ];
+
+  // default border colors
+  const defaultBorderColors = [
+    'rgba(51, 102, 255, 0.95)',
+    'rgba(255, 218, 38, 0.95)',
+    'rgba(255, 68, 203, 0.95)',
+    'rgba(114, 226, 59, 0.95)',
+    'rgba(49, 206, 249, 0.95)',
+    'rgba(255, 90, 30, 0.95)',
+    'rgba(251, 0, 253, 0.95)',
+    'rgba(255, 11, 11, 0.95)',
+    'rgba(11, 236, 220, 0.95)'
   ];
 
   // default error color
   const defaultErrorColor = 'rgba(255, 0, 0, 0.1)';
+
+  // default indicator styles
+  const defaultIndicatorStyle = 'light';
 
   // Error color gets shown when tabs aren't right,
   //  e.g. when you have your tabs set to 2 spa ces but the indent is 3 spaces
@@ -57,7 +73,7 @@ export function activate(context: vscode.ExtensionContext) {
     ] || false;
   const indicatorStyle =
     vscode.workspace.getConfiguration('indentRainbow')['indicatorStyle'] ||
-    'classic';
+    defaultIndicatorStyle;
   const borderIndicatorStyleLineWidth =
     vscode.workspace.getConfiguration('indentRainbow')[
       'borderIndicatorStyleLineWidth'
@@ -67,6 +83,9 @@ export function activate(context: vscode.ExtensionContext) {
   const colors =
     vscode.workspace.getConfiguration('indentRainbow')['colors'] ||
     defaultColors;
+  const borderColors =
+    vscode.workspace.getConfiguration('indentRainbow')['borderColors'] ||
+    defaultBorderColors;
 
   // Loops through colors and creates decoration types for each one
   colors.forEach((color, index) => {
@@ -74,11 +93,20 @@ export function activate(context: vscode.ExtensionContext) {
       decorationTypes[index] = vscode.window.createTextEditorDecorationType({
         backgroundColor: color
       });
-    } else if (indicatorStyle === 'light') {
+    } else if (indicatorStyle === 'borders') {
       decorationTypes[index] = vscode.window.createTextEditorDecorationType({
         borderStyle: 'solid',
         borderColor: color,
         borderWidth: `0 0 0 ${borderIndicatorStyleLineWidth}px`
+      });
+    } else if (indicatorStyle === 'light') {
+      const defaultRandomColor =
+        borderColors[Math.floor(Math.random() * borderColors.length)];
+      decorationTypes[index] = vscode.window.createTextEditorDecorationType({
+        borderStyle: 'solid',
+        borderColor: borderColors?.[index] || defaultRandomColor,
+        borderWidth: `0 0 0 ${borderIndicatorStyleLineWidth}px`,
+        backgroundColor: color
       });
     }
   });

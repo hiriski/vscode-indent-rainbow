@@ -74,12 +74,32 @@
                 "indentRainbow.colors": {
                     "type": "array",
                     "default": [
-                        "rgba(255,255,64,0.07)",
-                        "rgba(127,255,127,0.07)",
-                        "rgba(255,127,255,0.07)",
-                        "rgba(79,236,236,0.07)"
+                        "rgba(51, 102, 255, 0.1)",
+                        "rgba(255, 218, 38, 0.1)",
+                        "rgba(255, 68, 203, 0.1)",
+                        "rgba(114, 226, 59, 0.1)",
+                        "rgba(49, 206, 249, 0.1)",
+                        "rgba(255, 90, 30, 0.1)",
+                        "rgba(251, 0, 253, 0.1)",
+                        "rgba(255, 11, 11, 0.1)",
+                        "rgba(11, 236, 220, 0.1)"
                     ],
                     "description": "An array with color (hex, rgba, rgb) strings which are used as colors, can be any length."
+                },
+                "indentRainbow.borderColors": {
+                    "type": "array",
+                    "default": [
+                        "rgba(51, 102, 255, 0.95)",
+                        "rgba(255, 218, 38, 0.95)",
+                        "rgba(255, 68, 203, 0.95)",
+                        "rgba(114, 226, 59, 0.95)",
+                        "rgba(49, 206, 249, 0.95)",
+                        "rgba(255, 90, 30, 0.95)",
+                        "rgba(251, 0, 253, 0.95)",
+                        "rgba(255, 11, 11, 0.95)",
+                        "rgba(11, 236, 220, 0.95)"
+                    ],
+                    "description": "An array with color (hex, rgba, rgb) strings which are used as border colors for variant light, can be any length."
                 },
                 "indentRainbow.colorOnWhiteSpaceOnly": {
                     "type": "boolean",
@@ -91,7 +111,8 @@
                     "default": "classic",
                     "enum": [
                         "classic",
-                        "borders"
+                        "borders",
+                        "light"
                     ],
                     "markdownDescription": "Classic mode uses a full colored tab to indicate the indendation. Borders mode will only display a colored border similar to the default indent guide lines. You can disable the default indicators with `#editor.guides.indentation#`."
                 },
