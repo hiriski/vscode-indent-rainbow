@@ -89,7 +89,10 @@
                 "indentRainbow.indicatorStyle": {
                     "type": "string",
                     "default": "classic",
-                    "enum": ["classic", "light"],
+                    "enum": [
+                        "classic",
+                        "light"
+                    ],
                     "markdownDescription": "Classic mode uses a full colored tab to indicate the indendation. Light mode will only display a colored border similar to the default indent guide lines. You can disable the default indicators with `#editor.guides.indentation#`."
                 },
                 "indentRainbow.lightIndicatorStyleLineWidth": {
@@ -123,6 +126,7 @@
         "eslint": "^7.16.0",
         "glob": "^7.1.6",
         "mocha": "^9.1.4",
+        "prettier": "^3.3.3",
         "ts-loader": "^9.2.3",
         "typescript": "^4.1.2",
         "vscode-test": "^1.4.1",
