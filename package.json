@@ -91,11 +91,11 @@
                     "default": "classic",
                     "enum": [
                         "classic",
-                        "light"
+                        "borders"
                     ],
-                    "markdownDescription": "Classic mode uses a full colored tab to indicate the indendation. Light mode will only display a colored border similar to the default indent guide lines. You can disable the default indicators with `#editor.guides.indentation#`."
+                    "markdownDescription": "Classic mode uses a full colored tab to indicate the indendation. Borders mode will only display a colored border similar to the default indent guide lines. You can disable the default indicators with `#editor.guides.indentation#`."
                 },
-                "indentRainbow.lightIndicatorStyleLineWidth": {
+                "indentRainbow.borderIndicatorStyleLineWidth": {
                     "type": "number",
                     "default": 1,
                     "description": "This property defines the indent indicator lineWidth when using light mode."

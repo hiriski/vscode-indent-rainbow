@@ -58,9 +58,9 @@ export function activate(context: vscode.ExtensionContext) {
   const indicatorStyle =
     vscode.workspace.getConfiguration('indentRainbow')['indicatorStyle'] ||
     'classic';
-  const lightIndicatorStyleLineWidth =
+  const borderIndicatorStyleLineWidth =
     vscode.workspace.getConfiguration('indentRainbow')[
-      'lightIndicatorStyleLineWidth'
+      'borderIndicatorStyleLineWidth'
     ] || 1;
 
   // Colors will cycle through, and can be any size that you want
@@ -78,7 +78,7 @@ export function activate(context: vscode.ExtensionContext) {
       decorationTypes[index] = vscode.window.createTextEditorDecorationType({
         borderStyle: 'solid',
         borderColor: color,
-        borderWidth: `0 0 0 ${lightIndicatorStyleLineWidth}px`
+        borderWidth: `0 0 0 ${borderIndicatorStyleLineWidth}px`
       });
     }
   });
